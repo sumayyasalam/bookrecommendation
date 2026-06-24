@@ -13,15 +13,23 @@ st.set_page_config(
 st.title("📚 Book Recommendation System")
 
 # Load Files
-try:
-    popular_df = pickle.load(open('popular.pkl', 'rb'))
-    pt = pickle.load(open('pivot.pkl', 'rb'))
-    similarity_scores = pickle.load(open('similarity.pkl', 'rb'))
+import pickle
+import streamlit as st
 
-except Exception as e:
-    st.error(f"Error loading files: {e}")
-    st.stop()
+files = [
+    "popular.pkl",
+    "pivot.pkl",
+    "similarity.pkl",
+    "books_small.pkl"
+]
 
+for file in files:
+    try:
+        with open(file, "rb") as f:
+            obj = pickle.load(f)
+        st.success(f"{file} loaded successfully")
+    except Exception as e:
+        st.error(f"{file} ERROR: {e}")
 # Display Popular Books
 st.header("⭐ Top Recommended Books")
 
