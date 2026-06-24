@@ -3,69 +3,81 @@ import pickle
 import pandas as pd
 import numpy as np
 
+# Page Configuration
 st.set_page_config(
-page_title="Book Recommendation System",
-page_icon="📚",
-layout="wide"
+    page_title="Book Recommendation System",
+    page_icon="📚",
+    layout="wide"
 )
 
 st.title("📚 Book Recommendation System")
 
-# Load Popular Books
+# Load Files
+try:
+    popular_df = pickle.load(open('popular.pkl', 'rb'))
+    pt = pickle.load(open('pivot.pkl', 'rb'))
+    similarity_scores = pickle.load(open('similarity.pkl', 'rb'))
 
-popular_df = pickle.load(open('popular.pkl', 'rb'))
+except Exception as e:
+    st.error(f"Error loading files: {e}")
+    st.stop()
 
-st.subheader("Top Recommended Books")
-st.dataframe(popular_df.head(10))
+# Display Popular Books
+st.header("⭐ Top Recommended Books")
 
-# Load Pivot File
+try:
+    st.dataframe(popular_df.head(10))
+except:
+    st.write(popular_df)
 
-pt = pickle.load(open('pivot.pkl', 'rb'))
-
-# Load Similarity Matrix
-
-similarity_scores = pickle.load(open('similarity.pkl', 'rb'))
-
-st.write("Pivot Shape:", pt.shape)
-st.write("Similarity Shape:", similarity_scores.shape)
+# Debug Information
+with st.expander("Dataset Information"):
+    st.write("Pivot Table Shape:", pt.shape)
+    st.write("Similarity Matrix Shape:", similarity_scores.shape)
+    st.write("Number of Books:", len(pt.index))
 
 # Recommendation Function
-
 def recommend(book_name):
+    try:
+        if book_name not in pt.index:
+            return []
 
-```
-index = list(pt.index).index(book_name)
+        index = np.where(pt.index == book_name)[0][0]
 
-similar_items = sorted(
-    list(enumerate(similarity_scores[index])),
-    key=lambda x: x[1],
-    reverse=True
-)[1:6]
+        similar_items = sorted(
+            list(enumerate(similarity_scores[index])),
+            key=lambda x: x[1],
+            reverse=True
+        )[1:6]
 
-recommendations = []
+        recommendations = []
 
-for i in similar_items:
-    recommendations.append(pt.index[i[0]])
+        for i in similar_items:
+            recommendations.append(pt.index[i[0]])
 
-return recommendations
-```
+        return recommendations
+
+    except Exception as e:
+        st.error(f"Recommendation Error: {e}")
+        return []
 
 # Recommendation Section
-
-st.header("📚 Get Book Recommendations")
+st.header("📖 Get Book Recommendations")
 
 selected_book = st.selectbox(
-"Choose a Book",
-pt.index.values
+    "Choose a Book",
+    pt.index.values
 )
 
 if st.button("🔍 Recommend Books"):
 
-```
-recommendations = recommend(selected_book)
+    recommendations = recommend(selected_book)
 
-st.subheader("Recommended Books")
+    if recommendations:
+        st.subheader("Recommended Books")
 
-for book in recommendations:
-    st.write("📖", book)
-```
+        for i, book in enumerate(recommendations, start=1):
+            st.write(f"{i}. 📚 {book}")
+
+    else:
+        st.warning("No recommendations found for the selected book.")
