@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import pandas as pd
+import numpy as np
 
 st.title("📚 Book Recommendation System")
 
@@ -62,4 +63,4 @@ if st.button("Recommend"):
     for book in recommendations:
         st.write("📖", book)
 
-import numpy as np
+
