@@ -27,16 +27,10 @@ selected_book = st.selectbox(
 
 def recommend(book_name):
 
-    index = np.where(
-        pt.index == book_name
-    )[0][0]
+    index = list(pt.index).index(book_name)
 
     similar_items = sorted(
-        list(
-            enumerate(
-                similarity_scores[index]
-            )
-        ),
+        list(enumerate(similarity_scores[index])),
         key=lambda x: x[1],
         reverse=True
     )[1:6]
@@ -44,23 +38,8 @@ def recommend(book_name):
     recommendations = []
 
     for i in similar_items:
-        recommendations.append(
-            pt.index[i[0]]
-        )
+        recommendations.append(pt.index[i[0]])
 
     return recommendations
-
-if st.button("Recommend"):
-
-    recommendations = recommend(
-        selected_book
-    )
-
-    st.subheader(
-        "Recommended Books"
-    )
-
-    for book in recommendations:
-        st.write("📖", book)
 
 
