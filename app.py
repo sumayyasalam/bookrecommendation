@@ -36,8 +36,4 @@ popular_df = pickle.load(open('popular.pkl','rb'))
 
 st.subheader("Top Recommended Books")
 
-st.dataframe(
-popular_df[
-['Book-Title','Book-Author']
-].head(10)
-)
+st.write(popular_df.head())
