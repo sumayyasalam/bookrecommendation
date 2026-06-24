@@ -31,6 +31,8 @@ unsafe_allow_html=True)
 
 st.markdown("<p class='subtitle'>AI Powered Book Recommendation Engine</p>",
 unsafe_allow_html=True)
+st.write(popular_df.columns.tolist())
+st.write(popular_df.head())
 
 popular_df = pickle.load(open('popular.pkl','rb'))
 
