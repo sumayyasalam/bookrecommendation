@@ -36,4 +36,16 @@ popular_df = pickle.load(open('popular.pkl','rb'))
 
 st.subheader("Top Recommended Books")
 
-st.write(popular_df.head())
+st.subheader("Top Recommended Books")
+
+for i in range(min(10, len(popular_df))):
+    st.write(
+        f"📖 {popular_df.iloc[i]['Book-Title']}"
+    )
+    st.write(
+        f"⭐ Rating: {popular_df.iloc[i]['avg_rating']:.2f}"
+    )
+    st.write(
+        f"👥 Ratings Count: {popular_df.iloc[i]['num_rating']}"
+    )
+    st.write("---")
