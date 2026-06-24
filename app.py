@@ -5,8 +5,13 @@ st.write("App Started")
 
 popular_df = pickle.load(open('popular.pkl','rb'))
 
-st.write("File Loaded Successfully")
+st.subheader("Top Recommended Books")
 
-st.write(type(popular_df))
+st.dataframe(popular_df.head(10))
+st.write("Pivot Shape:", pt.shape)
 
-st.write(popular_df.head())
+st.write("Similarity Shape:")
+st.write(similarity_scores.shape)
+pt = pickle.load(open('pivot.pkl','rb'))
+
+similarity_scores = pickle.load(open('similarity.pkl','rb'))
